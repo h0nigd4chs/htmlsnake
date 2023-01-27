@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>Snake</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <script>
+      // Create the canvas
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      // Set up the game
+      var snakeX = canvas.width/2;
+      var snakeY = canvas.height/2;
+      var cellSize = 10;
+      var snakeLength = 5;
+      var snakeDirection = "right";
+      var foodX;
+      var foodY;
+
+      // Draw the snake
+      function drawSnake() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(snakeX, snakeY, cellSize, cellSize);
+      }
+
+      // Generate the food
+      function generateFood() {
+        foodX = Math.floor(Math.random() * (canvas.width/cellSize)) * cellSize;
+        foodY = Math.floor(Math.random() * (canvas.height/cellSize)) * cellSize;
+      }
+
+      // Draw the food
+      function drawFood() {
+        ctx.fillStyle = "red";
+        ctx.fillRect(foodX, foodY, cellSize, cellSize);
+      }
+
+      // Set up the game loop
+      function gameLoop() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        drawSnake();
+        drawFood();
+        updateSnake();
+      }
+
+      // Update the snake's position
+      function updateSnake() {
+        // Check for collision with food
+        if(snakeX == foodX && snakeY == foodY) {
+          snakeLength++;
+          generateFood();
+        }
+        // Update the position based on the direction
+        switch(snakeDirection) {
+          case "up":
+            snakeY -= cellSize;
+            break;
+          case "down":
+            snakeY += cellSize;
+            break;
+          case "left":
+            snakeX -= cellSize;
+            break;
+          case "right":
+            snakeX += cellSize;
+            break;
+        }
+        // Check for game over
+        if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height) {
+          alert("Game Over!");
+        }
+      }
+
+      // Set up the key listeners
+      document.onkeydown = function(evt) {
+        switch(evt.keyCode) {
+          case 37: // Left
+            snakeDirection = "left";
+            break;
+          case 38: // Up
+            snakeDirection = "up";
+            break;
+          case 39: // Right
+            snakeDirection = "right";
+            break;
+          case 40: // Down
+            snakeDirection = "down";
+            break;
+        }
+      }
+
+      // Start the game
+      generateFood();
+      setInterval(gameLoop, 100);
+    </script>
+  </body>
+</html>
